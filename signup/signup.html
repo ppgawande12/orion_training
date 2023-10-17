@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="container">
+      <div id="header">
+        <img src="download.png" alt="Logo" />
+      </div>
+      <form>
+        <div class="form-group">
+          <label for="firstname">First Name:</label>
+          <input type="text" id="firstname" name="firstname" required />
+        </div>
+        <div class="form-group">
+          <label for="lastname">Last Name:</label>
+          <input type="text" id="lastname" name="lastname" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email or Phone Number:</label>
+          <input type="text" id="email" name="email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Conform Password:</label>
+          <input type="password" id="cnPassword" name="password" required />
+        </div>
+        <button type="submit" id="subBtn">Sign Up</button>
+      </form>
+      <div id="footer">
+        <p>Already have an account? <a href="login.html">Log in</a></p>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var form = document.querySelector("form");
+        var subBtn = document.getElementById("subBtn");
+
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+          var firstname = document.getElementById("firstname").value;
+          var lastname = document.getElementById("lastname").value;
+          var email = document.getElementById("email").value;
+          var password = document.getElementById("password").value;
+          var cnPassword = document.getElementById("cnPassword").value;
+
+          if (
+            firstname.trim() === "" ||
+            lastname.trim() === "" ||
+            email.trim() === "" ||
+            password.trim() === "" ||
+            cnPassword.trim() === ""
+          ) {
+            alert("Please fill in all fields");
+            return;
+          }
+
+          if (password !== cnPassword) {
+            alert("Password and Confirm Password do not match");
+            return;
+          }
+          var formConform = confirm("Registration has been successfully.... Go to Login Page..!");
+          if (formConform) {
+            window.location.href = "login.html";
+          } else {
+            form.reset();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
