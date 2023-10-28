@@ -75,7 +75,9 @@
   </head>
   <body>
     <div id="container">
-      <div id="header">Sign Up</div>
+      <div id="header">
+        <img src="{{ url_for('static', filename='images/download.png') }}" alt="Logo" />
+      </div>
       <form method="POST">
         <div class="form-group">
           <label for="firstname">First Name:</label>
@@ -100,7 +102,7 @@
         <input type="submit" id="subBtn" value="Sign Up" />
       </form>
       <div id="footer">
-        <p>Already have an account? <a href="login.html">Log in</a></p>
+        <p>Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
       </div>
     </div>
   </body>
