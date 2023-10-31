@@ -7,10 +7,49 @@ app.secret_key = 'Pass@123'
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/mydb'
 mongo = PyMongo(app)
 users_collection = mongo.db.users
+products_collection = mongo.db.products
 
 @app.route('/')
 def home():
     return render_template('base.html')
+
+
+@app.route('/index')
+def index():
+    if 'email' in session:
+        products = list(products_collection.find())
+        return render_template('index.html', products=products)
+    return redirect(url_for('login'))
+
+@app.route('/add_to_cart/<product_id>')
+def add_to_cart(product_id):
+    if 'email' in session:
+        user = users_collection.find_one({'email': session['email']})
+        if user:
+            cart = user.get('cart', [])
+            if product_id not in cart:
+                cart.append(product_id)
+                users_collection.update_one({'email': session['email']}, {'$set': {'cart': cart}})
+    return redirect(url_for('index'))
+
+@app.route('/cart')
+def view_cart():
+    if 'email' in session:
+        cart_ids = users_collection.find_one({'email': session['email']})['cart']
+        cart_items = list(products_collection.find({'_id': {'$in': cart_ids}}))
+        total_price = sum(item['price'] for item in cart_items)
+        return render_template('cart.html', cart_items=cart_items, total_price=total_price)
+    return redirect(url_for('login'))
+
+@app.route('/remove_from_cart/<product_id>')
+def remove_from_cart(product_id):
+    if 'email' in session:
+        cart = users_collection.find_one({'email': session['email']})['cart']
+        if product_id in cart:
+            cart.remove(product_id)
+            users_collection.update_one({'email': session['email']}, {'$set': {'cart': cart}})
+    return redirect(url_for('view_cart'))
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -20,9 +59,9 @@ def signup():
         if users_collection.find_one({'email': email}):
             return 'Email already exists. Choose another one.'
         hashed_password = generate_password_hash(password)
-        users_collection.insert_one({'email': email, 'password': hashed_password})
+        users_collection.insert_one({'email': email, 'password': hashed_password, 'cart': []})
         session['email'] = email
-        return redirect(url_for('profile'))
+        return redirect(url_for('login'))
     return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -37,7 +76,7 @@ def login():
                 email = session['email']
                 if email == 'admin@12.com':
                     return render_template('admin.html')
-            return redirect(url_for('profile'))
+            return redirect(url_for('index'))
         return 'Invalid email or password. Please try again.'
     return render_template('login.html')
 
