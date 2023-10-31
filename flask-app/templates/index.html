@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home page</title>
+  </head>
+  <body>
+    <h1>Products</h1>
+    {% if 'email' in session %}
+    <ul>
+      {% for product in products %}
+      <li>
+        {{ product.name }} - ${{ product.price }}
+        <a href="/add_to_cart/{{ product._id }}">Add to Cart</a>
+      </li>
+      {% endfor %}
+    </ul>
+    <a href="/cart">View Cart</a>
+    {% else %}
+    <p>Please <a href="/index">login</a> to view products.</p>
+    {% endif %}
+  </body>
+</html>
