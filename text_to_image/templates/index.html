@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text to Image App</title>
+</head>
+<body>
+    <h1>Text to Image App</h1>
+    <form action="/generate_image" method="post">
+        <input type="text" name="text" placeholder="Enter text..." style="height: 40px; width: 512px; font-size: 15px;">
+        <input type="submit" value="Generate" style="height: 40px; width: 120px; font-size: 15px;">
+    </form>
+    <br>
+    <div id="image_result">
+        <!-- Image result will be displayed here -->
+    </div>
+</body>
+</html>
